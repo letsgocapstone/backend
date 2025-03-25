@@ -1,0 +1,39 @@
+#    docker-compose up -d
+#    >도커 폴더 들어와서 이거 실행하면 컴포즈 파일기반 이미지 파일로 컨테이너 생성함 (디비 생성되는 거임)
+
+#    docker ps
+#    >이명령어는 현재 로컬 기반 연결되어 있는 도커에 올라와있는 컨테이너 확인하는 명령어임 , 입력후 컨테이너 안 뜨면 생성 안된거임 확인해야함 (보통 compose.yml파일에러 문제)
+
+#    docker exec -it chargeous_mysql mysql -u root -p
+#    > 도커로 구축한 디비에 접속하는 명령어임 일단 위에 저거 입력하면 root로 접속됨
+#    현재는 charge_mg 사용자이름 ,비번 charge_mg로 생성해놈 컴포즈 파일로 근데 아마 사용자 권한 문제때매 로그인 안됧수도 있음 , 그러니 일단 root로 접속하셈.
+
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: chargeous_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chargeous_db
+      MYSQL_USER: charge_mg
+      MYSQL_PASSWORD: charge_mg
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mysql-network
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  mysql-network:
+    driver: bridge
+
+
+\
